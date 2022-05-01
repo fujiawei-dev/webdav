@@ -1,0 +1,1 @@
+make tidy && make builds
