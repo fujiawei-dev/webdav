@@ -4,8 +4,20 @@
 
 ## Usage
 
+### Raspberry Pi
+
 ```shell
-ssh root@master 'mkdir -p /root/bin'
-scp bin/webdav-linux-armv8 root@master:/root/bin/webdav
-ssh root@master 'chmod +x /root/bin/webdav; export PATH=$PATH:/root/bin; setsid webdav -P=7654 -D=/mnt > /dev/null 2>&1 &'
+make linux-armv8
+```
+
+```shell
+ssh root@raspberry 'mkdir -p /root/bin'
+```
+
+```shell
+scp bin/webdav-linux-armv8 root@raspberry:/root/bin/webdav
+```
+
+```shell
+ssh root@raspberry 'chmod +x /root/bin/webdav; export PATH=$PATH:/root/bin; setsid webdav -P=7654 -D=/mnt > /dev/null 2>&1 &'
 ```
