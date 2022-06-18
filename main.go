@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/http/httputil"
 	"os"
 
 	"golang.org/x/net/webdav"
@@ -30,11 +31,24 @@ func main() {
 	srv := &webdav.Handler{
 		FileSystem: webdav.Dir(directory),
 		LockSystem: webdav.NewMemLS(),
+		Logger: func(request *http.Request, err error) {
+			log.Printf(
+				"%s %s %s\n",
+				request.RemoteAddr,
+				request.Method,
+				request.URL,
+			)
+			if err != nil {
+				log.Printf("%s\n", err)
+				req, _ := httputil.DumpRequest(request, true)
+				log.Printf("%s\n", req)
+			}
+		},
 	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("%s %s\n", r.Method, r.URL.Path)
 		if r.Method == "GET" && ListDirectory(srv.FileSystem, w, r.URL.Path) {
+			log.Printf("%s %s\n", r.Method, r.URL.Path)
 			return
 		}
 		srv.ServeHTTP(w, r)
