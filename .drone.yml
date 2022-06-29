@@ -6,12 +6,12 @@ steps:
   - name: install
     commands:
       - make install
-  environment:
-    GOARCH: amd64
-    GOOS: linux
-    GOPROXY: https://goproxy.cn,direct
-    GOSUMDB: off
-    GO111MODULE: on
+    environment:
+      GOARCH: amd64
+      GOOS: linux
+      GOPROXY: https://goproxy.cn,direct
+      GOSUMDB: off
+      GO111MODULE: on
 
 trigger:
   branch:
