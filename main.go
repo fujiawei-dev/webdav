@@ -14,17 +14,52 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"os"
+	"runtime"
 
 	"golang.org/x/net/webdav"
 )
 
+var (
+	Version     = "development"
+	MakeVersion = ""
+	GitCommit   = ""
+	BuildTime   = ""
+)
+
+func formatBuiltWith() string {
+	version := runtime.Version()
+
+	if len(MakeVersion) > 0 {
+		version = MakeVersion + ", " + runtime.Version()
+	}
+
+	return " built with " + version
+}
+
+func formatVersion() string {
+	return fmt.Sprintf(
+		"%s, commit %s, built at %s,%s",
+		Version,
+		GitCommit,
+		BuildTime,
+		formatBuiltWith(),
+	)
+}
+
 func main() {
 	var port, directory string
+	var version bool
 
-	flag.StringVar(&port, "P", "7654", "http port")
-	flag.StringVar(&directory, "D", ".", "service directory")
+	flag.StringVar(&port, "p", "8080", "Port to listen on.")
+	flag.StringVar(&directory, "d", ".", "Directory to serve.")
+	flag.BoolVar(&version, "v", false, "Show version.")
 
 	flag.Parse()
+
+	if version {
+		fmt.Println(formatVersion())
+		os.Exit(0)
+	}
 
 	hostPort := ":" + port
 
